@@ -12,19 +12,16 @@ public class SignInDone extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in_done);
 
-        Thread thread = new Thread(){
-            public void run(){
-                try {
-                    sleep(1200);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                finally {
-                    Intent intent = new Intent(SignInDone.this,HomeActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
+        Thread thread = new Thread(() -> {
+            try {
+                Thread.sleep(1200);
+            }catch (Exception e){
+                e.printStackTrace();
             }
-        };thread.start();
+            finally {
+                startActivity(new Intent(SignInDone.this,HomeActivity.class));
+                finish();
+            }
+        });thread.start();
     }
 }

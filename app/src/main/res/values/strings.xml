@@ -1,13 +1,12 @@
 <resources>
     <string name="app_name">Tracky </string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="target_date">Target date</string>
     <string name="create_a_reminder"><b>Create a Reminder</b></string>
     <string name="tracky">Tracky : Track your Goal</string>
     <string name="visulization">Easy visulization</string>
     <string name="create_and_go">Let\'s Create and Go</string>
-
+    <string name="default_web_client_id">266570976970-o5s64e8k4v3dfjdlv4n73dap1k6qbb3e.apps.googleusercontent.com</string>
     <string-array name="Sort">
         <item>A-Z</item>
         <item>Date Added</item>

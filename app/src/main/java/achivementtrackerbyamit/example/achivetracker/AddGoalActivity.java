@@ -1,9 +1,5 @@
 package achivementtrackerbyamit.example.achivetracker;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +17,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,7 +28,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Calendar;
@@ -39,11 +38,11 @@ import java.util.Objects;
 import java.util.Set;
 
 import achivementtrackerbyamit.example.achivetracker.active_goal.GoingCLass;
+import achivementtrackerbyamit.example.achivetracker.databinding.ActivityAddgoalBinding;
 
-public class AddGoalActivity extends AppCompatActivity
-        implements AdapterView.OnItemSelectedListener  {
-
-    String[] courses = {"High","Medium","Less"};;
+public class AddGoalActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+    ActivityAddgoalBinding binding;
+    String[] courses = {"High","Medium","Less"};
     public Button yes,no;
     private EditText tripname;
     private String currentUserID = "";
@@ -58,15 +57,11 @@ public class AddGoalActivity extends AppCompatActivity
     Set<String> set;
     ImageView spinnerImageView;
     SimpleDateFormat DateFormat = new SimpleDateFormat("dd/M/yyyy");
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        binding=ActivityAddgoalBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_addgoal);
-
+        setContentView(binding.getRoot());
 
         InitializationMethod();
 
@@ -81,19 +76,9 @@ public class AddGoalActivity extends AppCompatActivity
             findViewById(R.id.create_goal_text_view).setVisibility(View.VISIBLE);
         }
 
-        spinnerImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                spino.performClick();
-            }
-        });
+        spinnerImageView.setOnClickListener(view -> spino.performClick());
 
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                YESONCLICK();
-            }
-        });
+        yes.setOnClickListener(v -> YESONCLICK());
 
     }
 
@@ -141,15 +126,13 @@ public class AddGoalActivity extends AppCompatActivity
                 set.clear();
                 for (DataSnapshot snapshot1 : snapshot.getChildren()) { //get all Goal IDs
                     GoingCLass going = snapshot1.getValue(GoingCLass.class);
-                    String s = going.getGoalName(); //Get data of Goal Name from that ID
+                    String s = Objects.requireNonNull(going).getGoalName(); //Get data of Goal Name from that ID
                     set.add(s); //add in arraylist
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 
@@ -171,17 +154,10 @@ public class AddGoalActivity extends AppCompatActivity
 
         String string = tripname.getText().toString();
         String description = goalDesc.getText().toString();
-
-
-
-        if (TextUtils.isEmpty (string))
-        {
+        if (TextUtils.isEmpty (string)) {
             Toast.makeText(AddGoalActivity.this, "Enter any Trip name ..", Toast.LENGTH_SHORT).show();
-
         }
-        else
-        {
-
+        else {
             HashMap<String, Object> onlineStat = new HashMap<>();
             onlineStat.put("GoalName", string);
             onlineStat.put("Goal_Description", description);
@@ -191,35 +167,23 @@ public class AddGoalActivity extends AppCompatActivity
             Intent loginIntent = new Intent ( AddGoalActivity.this,HomeActivity.class );
             loginIntent.addFlags ( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
             startActivity ( loginIntent );
-
         }
-
-
-
-
     }
-
 
     private void CreteANewGoal(String string_trip) {
 
-
         Date today = new Date();
         SimpleDateFormat format = new SimpleDateFormat("dd/M/yyyy hh:mm:ss");
-
-
         //String todaay is Today's Date
         String todaay  = format.format(today);
         String justToday = DateFormat.format(today);
         String Seven = "00:00:00:00:00:00:00";
-
 
         int year = datepicker.getYear();
         int month = datepicker.getMonth();
         int day = datepicker.getDayOfMonth();
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
-
-
 
         @SuppressLint("SimpleDateFormat") SimpleDateFormat formatt = new SimpleDateFormat("dd/M/yyyy");
         //String strDate is Selected Date
@@ -244,22 +208,20 @@ public class AddGoalActivity extends AppCompatActivity
         LocalDate selected = LocalDate.parse(calendarDate);
 
         //Comparing Dates and storing them in Boolean Variables
-        Boolean bool1 = current.isAfter(selected); //Past Date
-        Boolean bool2 = current.isBefore(selected); //Future Date
-        Boolean bool3 = current.isEqual(selected); ///Today'S Date
+        boolean bool1 = current.isAfter(selected); //Past Date
+        boolean bool2 = current.isBefore(selected); //Future Date
+        boolean bool3 = current.isEqual(selected); ///Today'S Date
         //Code Ends
 
         String description = goalDesc.getText().toString();
 
-        if (TextUtils.isEmpty (string))
-        {
+        if (TextUtils.isEmpty (string)) {
             Toast.makeText(AddGoalActivity.this, "Enter any Trip name ..", Toast.LENGTH_SHORT).show();
 
         } else if(set.contains(string) && !Edit.equals("true")) { //also checks if the function is called from Edit Activity
             Toast.makeText(this, "Goal Name Exists", Toast.LENGTH_SHORT).show();
         } else if(bool2 || bool3) //If the selected date is Future or Today's Date
         {
-
             HashMap<String,Object> onlineStat = new HashMap<> (  );
             onlineStat.put ( "GoalName", string);
             onlineStat.put ( "GoalType", string_priority);
@@ -288,12 +250,7 @@ public class AddGoalActivity extends AppCompatActivity
         } else if(bool1) { //If the selected date is Past date
             Toast.makeText(this, "Invalid Date Selected", Toast.LENGTH_SHORT).show();
         }
-
-
     }
-
-
-
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -301,14 +258,9 @@ public class AddGoalActivity extends AppCompatActivity
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-
+    public void onNothingSelected(AdapterView<?> parent) {}
 
     private void retrievePreviousData() {
-
-
         //dataKey= bundle.getString(DashboardActivity.ADD_TRIP_DATA_KEY);
         dataKey= getIntent().getStringExtra(DashboardActivity.ADD_TRIP_DATA_KEY);
 
@@ -316,8 +268,8 @@ public class AddGoalActivity extends AppCompatActivity
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // Get the previous goal name and description
-                String prevName= snapshot.child ( "GoalName" ).getValue ().toString ();
-                String prevDesc = snapshot.child("Goal_Description").getValue().toString();
+                String prevName= Objects.requireNonNull(snapshot.child("GoalName").getValue()).toString ();
+                String prevDesc = Objects.requireNonNull(snapshot.child("Goal_Description").getValue()).toString();
                 // Set the goal name and description
                 tripname.setText(prevName);
                 goalDesc.setText(prevDesc);
@@ -333,21 +285,13 @@ public class AddGoalActivity extends AppCompatActivity
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 
     private void addActivity(String goal, String time) {
-
         String key= activityRef.push().getKey();
         String value= "Created the "+goal+" on "+time;
-        activityRef.child(key).setValue(value, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                Toast.makeText(AddGoalActivity.this,"Goal "+goal+" stored successfully",Toast.LENGTH_SHORT).show();
-            }
-        });
+        activityRef.child(Objects.requireNonNull(key)).setValue(value, (error, ref) -> Toast.makeText(AddGoalActivity.this,"Goal "+goal+" stored successfully",Toast.LENGTH_SHORT).show());
     }
 }

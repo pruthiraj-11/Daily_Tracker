@@ -22,9 +22,11 @@ import java.util.Calendar;
 
 import achivementtrackerbyamit.example.achivetracker.HomeActivity;
 import achivementtrackerbyamit.example.achivetracker.R;
+import achivementtrackerbyamit.example.achivetracker.databinding.ActivityAlarmBinding;
 
 public class AlarmActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
+    ActivityAlarmBinding binding;
     Button DatePick, TimePick, SetAlarm;
     TextView showT, showD;
     Calendar set = Calendar.getInstance();
@@ -35,8 +37,9 @@ public class AlarmActivity extends AppCompatActivity implements DatePickerDialog
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        binding=ActivityAlarmBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_alarm);
+        setContentView(binding.getRoot());
         InitialzeMethod();
         DatePick.setOnClickListener(new View.OnClickListener() {
             @Override

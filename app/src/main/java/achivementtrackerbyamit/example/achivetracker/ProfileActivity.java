@@ -1,15 +1,8 @@
 package achivementtrackerbyamit.example.achivetracker;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -18,15 +11,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.text.InputType;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.app.ActivityCompat;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,7 +33,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -51,9 +46,9 @@ import org.eazegraph.lib.models.ValueLineSeries;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,12 +57,9 @@ import java.util.Objects;
 import achivementtrackerbyamit.example.achivetracker.active_goal.GoingCLass;
 import achivementtrackerbyamit.example.achivetracker.auth.RegisterActivity;
 import achivementtrackerbyamit.example.achivetracker.auth.Users;
-import achivementtrackerbyamit.example.achivetracker.splash.SplasshActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity {
-
-
     TextView welcome1, welcome2;
     private DatabaseReference reference, tillActive,Rootref;
     ProgressDialog progressDialog;
@@ -89,42 +81,16 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
-
-
         InitializationMethod();
         getUserDatafromFirebase();
         Graph();
+        editname.setOnClickListener(v -> EditName());
 
-        editname.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditName();
-            }
-        });
+        Logout.setOnClickListener(v -> LogOutMethod());
 
-        Logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                LogOutMethod();
-
-            }
-        });
-
-        profilePicButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                ShowOptionsforProfilePic();
-
-            }
-        });
+        profilePicButton.setOnClickListener(view -> ShowOptionsforProfilePic());
     }
-
-
     private void InitializationMethod() {
-
         welcome1 = findViewById(R.id.users_name);
         welcome2 = findViewById(R.id.users_email);
         Logout = findViewById(R.id.logout);
@@ -187,32 +153,29 @@ public class ProfileActivity extends AppCompatActivity {
     // Showing options for getting image to set as profile picture
     private void ShowOptionsforProfilePic() {
 
-        new MaterialAlertDialogBuilder(ProfileActivity.this).setBackground(getResources().getDrawable(R.drawable.material_dialog_box)).setTitle("Change profile photo").setItems(new String[]{"Choose from gallery", "Take a new picture"}, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                switch (i) {
-                    // Choosing image from gallery
-                    case 0:
-                        // Defining Implicit Intent to mobile gallery
-                        Intent intent = new Intent();
-                        intent.setType("image/*");
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(
-                                Intent.createChooser(
-                                        intent,
-                                        "Select Image from here..."),
-                                GALLERY_INTENT_CODE);
-                        break;
+        new MaterialAlertDialogBuilder(ProfileActivity.this).setBackground(getResources().getDrawable(R.drawable.material_dialog_box)).setTitle("Change profile photo").setItems(new String[]{"Choose from gallery", "Take a new picture"}, (dialogInterface, i) -> {
+            switch (i) {
+                // Choosing image from gallery
+                case 0:
+                    // Defining Implicit Intent to mobile gallery
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(
+                            Intent.createChooser(
+                                    intent,
+                                    "Select Image from here..."),
+                            GALLERY_INTENT_CODE);
+                    break;
 
-                    // Clicking a new picture using camera
-                    case 1:
-                        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-                            startActivityForResult(cameraIntent, CAMERA_INTENT_CODE);
-                        }
+                // Clicking a new picture using camera
+                case 1:
+                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (cameraIntent.resolveActivity(getPackageManager()) != null) {
                         startActivityForResult(cameraIntent, CAMERA_INTENT_CODE);
-                        break;
-                }
+                    }
+                    startActivityForResult(cameraIntent, CAMERA_INTENT_CODE);
+                    break;
             }
         }).show();
 
@@ -225,15 +188,12 @@ public class ProfileActivity extends AppCompatActivity {
         builder.setIcon(android.R.drawable.ic_dialog_alert);
         builder.setMessage("Are you sure you want to logout?");
         builder.setBackground(getResources().getDrawable(R.drawable.material_dialog_box , null));
-        builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                FirebaseAuth.getInstance().signOut();
-                Intent loginIntenttt = new Intent(ProfileActivity.this, RegisterActivity.class);
-                loginIntenttt.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(loginIntenttt);
-                finish();
-            }
+        builder.setPositiveButton(android.R.string.yes, (dialogInterface, i) -> {
+            FirebaseAuth.getInstance().signOut();
+            Intent loginIntenttt = new Intent(ProfileActivity.this, RegisterActivity.class);
+            loginIntenttt.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(loginIntenttt);
+            finish();
         });
         builder.setNegativeButton(android.R.string.no, null);
 
@@ -272,9 +232,9 @@ public class ProfileActivity extends AppCompatActivity {
 
                 // Image received from camera
                 case CAMERA_INTENT_CODE:
-                    Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                    Bitmap bitmap = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
                     profilePic.setImageBitmap(bitmap);
-                    updateProfilePic(bitmap);
+                    updateProfilePic(Objects.requireNonNull(bitmap));
                     break;
             }
         }
@@ -296,38 +256,29 @@ public class ProfileActivity extends AppCompatActivity {
         byte[] pfp = baos.toByteArray();
 
         // Uploading the byte array to firebase storage
-        storageReference.putBytes(pfp).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if (task.isSuccessful()) {
-                    // Getting url of the image uploaded to firebase storage
-                    task.getResult().getStorage().getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            if (task.isSuccessful()) {
-                                // Setting the image url as the user_image property of the user in the database
-                                String pfpUrl = task.getResult().toString();
-                                reference.child(userID).child("user_image").setValue(pfpUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        progressDialog.dismiss();
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(ProfileActivity.this, "Profile picture updated", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(ProfileActivity.this, "Failed to update profile picture", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
+        storageReference.putBytes(pfp).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // Getting url of the image uploaded to firebase storage
+                task.getResult().getStorage().getDownloadUrl().addOnCompleteListener(task1 -> {
+                    if (task1.isSuccessful()) {
+                        // Setting the image url as the user_image property of the user in the database
+                        String pfpUrl = task1.getResult().toString();
+                        reference.child(userID).child("user_image").setValue(pfpUrl).addOnCompleteListener(task11 -> {
+                            progressDialog.dismiss();
+                            if (task11.isSuccessful()) {
+                                Toast.makeText(ProfileActivity.this, "Profile picture updated", Toast.LENGTH_SHORT).show();
                             } else {
-                                progressDialog.dismiss();
                                 Toast.makeText(ProfileActivity.this, "Failed to update profile picture", Toast.LENGTH_SHORT).show();
                             }
-                        }
-                    });
-                } else {
-                    progressDialog.dismiss();
-                    Toast.makeText(ProfileActivity.this, "Failed to update profile picture"+task.getException(), Toast.LENGTH_SHORT).show();
-                }
+                        });
+                    } else {
+                        progressDialog.dismiss();
+                        Toast.makeText(ProfileActivity.this, "Failed to update profile picture", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                progressDialog.dismiss();
+                Toast.makeText(ProfileActivity.this, "Failed to update profile picture"+task.getException(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -339,20 +290,14 @@ public class ProfileActivity extends AppCompatActivity {
                 .setTitle("Enter your Name")
                 .setMessage("This will update your current Name")
                 .setIcon(R.drawable.ic_baseline_edit_24)
-                .setInputFilter("Wrong Input, please try again!", new LovelyTextInputDialog.TextFilter() {
-                    @Override
-                    public boolean check(String text) {
+                .setInputFilter("Wrong Input, please try again!", text -> {
 
-                        //return text.matches("\\w+");
-                        return text.matches("^[a-zA-z0-9_]+( [a-zA-z0-9_]+)*$");
-                    }
+                    //return text.matches("\\w+");
+                    return text.matches("^[a-zA-z0-9_]+( [a-zA-z0-9_]+)*$");
                 })
-                .setConfirmButton(android.R.string.ok, new LovelyTextInputDialog.OnTextInputConfirmListener() {
-                    @Override
-                    public void onTextInputConfirmed(String text) {
-                        reference.child(userID).child("name").setValue(text); //calling child and setting
-                        welcome1.setText(text);
-                    }
+                .setConfirmButton(android.R.string.ok, text -> {
+                    reference.child(userID).child("name").setValue(text); //calling child and setting
+                    welcome1.setText(text);
                 })
                 .setNegativeButton(android.R.string.no, null)
                 .show();
@@ -366,7 +311,7 @@ public class ProfileActivity extends AppCompatActivity {
                 GoalName.clear();
                 for(DataSnapshot snapshot1 : snapshot.getChildren()) { //get all Goal IDs
                     GoingCLass going = snapshot1.getValue(GoingCLass.class);
-                    String s = going.getGoalName(); //Get data of Goal Name from that ID
+                    String s = Objects.requireNonNull(going).getGoalName(); //Get data of Goal Name from that ID
                     GoalName.add(s); //add in arraylist
                 }
             }
@@ -386,12 +331,9 @@ public class ProfileActivity extends AppCompatActivity {
                 .setTitle("Save PDF")
                 .setMessage("Enter a name for your PDF.")
                 .setIcon(R.drawable.ic_baseline_edit_24)
-                .setConfirmButton(android.R.string.ok, new LovelyTextInputDialog.OnTextInputConfirmListener() {
-                    @Override
-                    public void onTextInputConfirmed(String text) {
-                        fileName = text; //Saving Entered name in String
-                        createPDF();
-                    }
+                .setConfirmButton(android.R.string.ok, text -> {
+                    fileName = text; //Saving Entered name in String
+                    createPDF();
                 })
                 .setNegativeButton(android.R.string.no, null)
                 .show();
@@ -404,18 +346,8 @@ public class ProfileActivity extends AppCompatActivity {
                 if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CONTACTS)) {
                     new AlertDialog.Builder(this)
                             .setMessage("Access Storage Permission")
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_PERMISSION);
-                                }
-                            })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            })
+                            .setPositiveButton("OK", (dialog, which) -> requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_PERMISSION))
+                            .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel())
                             .create()
                             .show();
                     return;
@@ -430,7 +362,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
             pdf = new File(docPath.getAbsolutePath(), fileName + ".pdf");
             try {
-                OutputStream stream = new FileOutputStream(pdf);
+                OutputStream stream = Files.newOutputStream(pdf.toPath());
 
                 Document document = new Document();
                 PdfWriter.getInstance(document, stream);
@@ -455,7 +387,7 @@ public class ProfileActivity extends AppCompatActivity {
         Rootref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String fetch = snapshot.child("Average").child("String").getValue().toString();
+                String fetch = Objects.requireNonNull(snapshot.child("Average").child("String").getValue()).toString();
                 String[] sp = fetch.split(";");
 
 

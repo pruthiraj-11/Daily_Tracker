@@ -32,19 +32,16 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.RankViewHolder
 
     Context context;
     List<DataSnapshot> rankList;
-
     public RankAdapter(Context context, List<DataSnapshot> rankList) {
         this.context = context;
         this.rankList = rankList;
     }
-
     @NonNull
     @Override
     public RankViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.rank_list_item,parent,false);
         return new RankViewHolder(view);
     }
-
     @Override
     public void onBindViewHolder(@NonNull RankViewHolder holder, int position) {
         DataSnapshot snapshot = rankList.get(position);
@@ -115,17 +112,12 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.RankViewHolder
                 if (snapshott.hasChild("user_image")){
                     Picasso.get().load(snapshott.child("user_image").getValue().toString()).error(R.drawable.profile).placeholder(R.drawable.profile).into(holder.goalImage);
                 }
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(context.getApplicationContext(), "Cannot fetch data", Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
     }
 
     @Override

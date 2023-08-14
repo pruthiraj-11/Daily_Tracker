@@ -49,10 +49,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class SettingsFragment extends Fragment {
-
-
-
-
     private TextView rateus , share , feedback, privacypolicy;
     private Button showLogs, delAll;
     private DatabaseReference reference, tillActive;
@@ -61,7 +57,6 @@ public class SettingsFragment extends Fragment {
     ImageView github;
     private ReviewInfo reviewInfo;
     private ReviewManager manager;
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

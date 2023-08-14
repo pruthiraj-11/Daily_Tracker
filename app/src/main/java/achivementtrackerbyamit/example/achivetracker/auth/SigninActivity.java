@@ -22,12 +22,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import achivementtrackerbyamit.example.achivetracker.HomeActivity;
 import achivementtrackerbyamit.example.achivetracker.R;
 import achivementtrackerbyamit.example.achivetracker.SignInDone;
+import achivementtrackerbyamit.example.achivetracker.databinding.ActivitySigninBinding;
 
 public class SigninActivity extends AppCompatActivity {
 
+    ActivitySigninBinding binding;
     private FirebaseAuth mAuth;
     EditText email,pass;
     TextView frgtpass,gotosignup;
@@ -37,12 +38,10 @@ public class SigninActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        binding=ActivitySigninBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signin);
-
-
-        InittializeMethods();
-
+        setContentView(binding.getRoot());
+        InitializeMethods();
         // Function to see password and hide password
         pass.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -113,7 +112,6 @@ public class SigninActivity extends AppCompatActivity {
                 }
                 else {
                     progressBar.setVisibility(View.VISIBLE);
-
                     mAuth.signInWithEmailAndPassword(emailtext,passtext).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -133,11 +131,8 @@ public class SigninActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
-
-    private void InittializeMethods() {
-
+    private void InitializeMethods() {
         mAuth = FirebaseAuth.getInstance();
         email = findViewById(R.id.loginemail);
         pass = findViewById(R.id.loginpassword);
@@ -146,5 +141,4 @@ public class SigninActivity extends AppCompatActivity {
         gotosignup = findViewById(R.id.signuptext);
         progressBar = findViewById(R.id.progressBar2);
     }
-
 }

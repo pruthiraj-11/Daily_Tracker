@@ -1,16 +1,14 @@
 package achivementtrackerbyamit.example.achivetracker;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,17 +24,13 @@ import java.util.Map;
 import java.util.Objects;
 
 import achivementtrackerbyamit.example.achivetracker.active_goal.ActiveGoalFragment;
-import achivementtrackerbyamit.example.achivetracker.active_goal.ActiveGoalFragment;
 import achivementtrackerbyamit.example.achivetracker.archive_goal.ArchiveGoalFragment;
-import achivementtrackerbyamit.example.achivetracker.archive_goal.ArchiveGoalFragment;
+import achivementtrackerbyamit.example.achivetracker.databinding.ActivityHomeBinding;
 import achivementtrackerbyamit.example.achivetracker.rank.RankFragment;
 import achivementtrackerbyamit.example.achivetracker.rank.Topper;
-import nl.dionsegijn.konfetti.xml.KonfettiView;
 
 public class HomeActivity extends AppCompatActivity {
-
-
-
+    ActivityHomeBinding binding;
     ChipNavigationBar chipNavigationBar;
     String currentUserID;
     DatabaseReference RootRef,NewRef;
@@ -49,24 +43,18 @@ public class HomeActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-
+        setContentView(binding.getRoot());
 
         InitializeMethods();
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frag_container_nav,
-                        new ActiveGoalFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container_nav,new ActiveGoalFragment()).commit();
         bottomMenu();
 
-        profile_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        profile_button.setOnClickListener(v -> {
 
-                Intent ProfileIntent = new Intent ( HomeActivity.this,ProfileActivity.class );
-                startActivity ( ProfileIntent );
+            Intent ProfileIntent = new Intent ( HomeActivity.this,ProfileActivity.class );
+            startActivity ( ProfileIntent );
 
-            }
         });
 
         RetriveUserImage();
@@ -97,7 +85,7 @@ public class HomeActivity extends AppCompatActivity {
                 for (DataSnapshot ds : snapshot.getChildren()){
                     try {
                         Map<String,Object> map = (Map<String, Object>) ds.getValue();
-                        Object goal_name = map.get("GoalName");
+                        Object goal_name = Objects.requireNonNull(map).get("GoalName");
                         Object consis = map.get("Consistency");
                         int maxConsis = Integer.parseInt(String.valueOf(consis));
                         if (maxConsis>max) {
@@ -147,47 +135,34 @@ public class HomeActivity extends AppCompatActivity {
         builder.setMessage("Do you really want to exit?");
         builder.setBackground(getResources().getDrawable(R.drawable.material_dialog_box , null));
         builder.setCancelable(false);
-        builder.setPositiveButton("Exit", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                finish();
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(HomeActivity.this, "Exit cancelled", Toast.LENGTH_LONG).show();
-            }
-        });
+        builder.setPositiveButton("Exit", (dialogInterface, i) -> finish());
+        builder.setNegativeButton("Cancel", (dialogInterface, i) -> Toast.makeText(HomeActivity.this, "Exit cancelled", Toast.LENGTH_LONG).show());
 
         builder.show();
     }
 
     private void bottomMenu() {
         chipNavigationBar.setOnItemSelectedListener
-                (new ChipNavigationBar.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(int i) {
-                        Fragment fragment = null;
-                        switch (i){
-                            case R.id.nav_home:
-                                fragment = new ActiveGoalFragment();
-                                break;
-                            case R.id.nav_new_archive:
-                                fragment = new ArchiveGoalFragment();
-                                break;
-                            case R.id.nav_new_ranking:
-                                fragment = new RankFragment();
-                                break;
-                            case R.id.nav_settings:
-                                fragment = new SettingsFragment();
-                                break;
-                        }
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.frag_container_nav,
-                                        fragment).commit();
-
+                (i -> {
+                    Fragment fragment = null;
+                    switch (i){
+                        case R.id.nav_home:
+                            fragment = new ActiveGoalFragment();
+                            break;
+                        case R.id.nav_new_archive:
+                            fragment = new ArchiveGoalFragment();
+                            break;
+                        case R.id.nav_new_ranking:
+                            fragment = new RankFragment();
+                            break;
+                        case R.id.nav_settings:
+                            fragment = new SettingsFragment();
+                            break;
                     }
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.frag_container_nav,
+                                    fragment).commit();
+
                 });
     }
 }

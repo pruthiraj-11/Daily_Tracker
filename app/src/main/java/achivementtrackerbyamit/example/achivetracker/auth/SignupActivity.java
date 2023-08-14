@@ -34,10 +34,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.io.IOException;
 
 import achivementtrackerbyamit.example.achivetracker.R;
+import achivementtrackerbyamit.example.achivetracker.databinding.ActivitySignupBinding;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SignupActivity extends AppCompatActivity {
 
+    ActivitySignupBinding binding;
     private final int GALLERY_INTENT_CODE = 993;
     private final int CAMERA_INTENT_CODE = 990;
     private FirebaseAuth mAuth;
@@ -54,13 +56,10 @@ public class SignupActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        binding=ActivitySignupBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
-
-
+        setContentView(binding.getRoot());
         InitializeMethods();
-
-        // Function to see password and hide password
         pass.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

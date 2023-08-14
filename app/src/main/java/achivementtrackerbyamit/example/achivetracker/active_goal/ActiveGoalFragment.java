@@ -2,12 +2,6 @@ package achivementtrackerbyamit.example.achivetracker.active_goal;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Pair;
@@ -17,7 +11,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,8 +39,6 @@ import achivementtrackerbyamit.example.achivetracker.R;
 
 public class ActiveGoalFragment extends Fragment {
 
-
-
     RecyclerView recyclerView;
     String currentUserID;
     DatabaseReference RootRef,archiveDataRef,activityRef, userRef, RootRefUpdate;
@@ -58,14 +54,8 @@ public class ActiveGoalFragment extends Fragment {
     TextView counter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_active_goal, container, false);
-
-
-
         mDialog = view.findViewById(R.id.loader_active_goal);
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         currentUserID = Objects.requireNonNull(mAuth.getCurrentUser()).getUid ();
@@ -83,21 +73,13 @@ public class ActiveGoalFragment extends Fragment {
         userRef = FirebaseDatabase.getInstance ().getReference ().child("Users").child(currentUserID).child("Average");
         RootRefUpdate= FirebaseDatabase.getInstance ().getReference ().child("Users").child(currentUserID);
         counter = view.findViewById(R.id.counter);
-
-
-
         // Carrying out search when text is added to the goalSearch
         goalSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
             public void afterTextChanged(Editable editable) {
@@ -136,12 +118,7 @@ public class ActiveGoalFragment extends Fragment {
 
 
         // Floating action button for new goals
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                OnNewGoalCreatefn();
-            }
-        });
+        button.setOnClickListener(v -> OnNewGoalCreatefn());
 
         getAvg();
 
@@ -180,7 +157,7 @@ public class ActiveGoalFragment extends Fragment {
                 count = snapshot.getChildrenCount();
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     GoingCLass goal = dataSnapshot.getValue(GoingCLass.class);
-                    sum+= Integer.parseInt(goal.getConsistency());
+                    sum+= Integer.parseInt(Objects.requireNonNull(goal).getConsistency());
                 }
 
 
@@ -191,8 +168,8 @@ public class ActiveGoalFragment extends Fragment {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if(!snapshot.exists()) return;
                             SimpleDateFormat newFormat = new SimpleDateFormat("dd/M/yyyy");
-                            String s = snapshot.child("String").getValue().toString();
-                            String d = snapshot.child("PDate").getValue().toString();
+                            String s = Objects.requireNonNull(snapshot.child("String").getValue()).toString();
+                            String d = Objects.requireNonNull(snapshot.child("PDate").getValue()).toString();
                             String[] fin  = new String[7];
                             String[] sp = s.split(";");
                             Date date = new Date();
@@ -202,7 +179,7 @@ public class ActiveGoalFragment extends Fragment {
                                 ndate = newFormat.parse(newd);
                                 pdate = newFormat.parse(d);
 
-                                long xf = ndate.getTime() - pdate.getTime();
+                                long xf = Objects.requireNonNull(ndate).getTime() - Objects.requireNonNull(pdate).getTime();
                                 long s_econdsInMilli = 1000;
                                 long m_inutesInMilli = s_econdsInMilli * 60;
                                 long h_oursInMilli = m_inutesInMilli * 60;

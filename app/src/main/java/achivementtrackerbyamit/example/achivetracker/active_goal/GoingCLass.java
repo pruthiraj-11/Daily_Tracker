@@ -3,24 +3,16 @@ package achivementtrackerbyamit.example.achivetracker.active_goal;
 
 public class GoingCLass {
 
-
-
     private String Consistency,EndTime,GoalName,GoalType,TodayTime;
 
-    public GoingCLass() {
-
-    }
-
+    public GoingCLass() {}
     public GoingCLass(String Consistency,String EndTime,String GoalName,String GoalType,String TodayTime) {
-
         this.Consistency = Consistency;
         this.EndTime = EndTime;
         this.GoalName = GoalName;
         this.GoalType = GoalType;
         this.TodayTime = TodayTime;
-
     }
-
     public String getConsistency() {
         return Consistency;
     }

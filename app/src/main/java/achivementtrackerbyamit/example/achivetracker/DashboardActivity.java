@@ -1,15 +1,6 @@
 package achivementtrackerbyamit.example.achivetracker;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -21,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -29,13 +19,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -71,7 +68,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import achivementtrackerbyamit.example.achivetracker.alarm.AlarmActivity;
-import achivementtrackerbyamit.example.achivetracker.auth.RegisterActivity;
+import achivementtrackerbyamit.example.achivetracker.databinding.ActivityDashboardBinding;
 import de.hdodenhof.circleimageview.CircleImageView;
 import sun.bob.mcalendarview.MCalendarView;
 import sun.bob.mcalendarview.MarkStyle;
@@ -80,6 +77,7 @@ import sun.bob.mcalendarview.vo.MarkedDates;
 
 public class DashboardActivity extends AppCompatActivity {
 
+    ActivityDashboardBinding binding;
     private final int GALLERY_INTENT_CODE = 993;
     private final int CAMERA_INTENT_CODE = 990;
 
@@ -101,7 +99,7 @@ public class DashboardActivity extends AppCompatActivity {
     @SuppressLint("SimpleDateFormat")
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/M/yyyy hh:mm:ss");
     SimpleDateFormat justDateFormat = new SimpleDateFormat("dd/M/yyyy");
-    private Handler handler = new Handler();
+    private final Handler handler = new Handler();
     private Runnable runnable;
     ImageView extendedFloatingShareButton;
     ImageView extendedFloatingEditButton;
@@ -121,9 +119,9 @@ public class DashboardActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        binding=ActivityDashboardBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
-
+        setContentView(binding.getRoot());
 
          InitializationMethod();
          clearCalendar();
@@ -202,8 +200,6 @@ public class DashboardActivity extends AppCompatActivity {
                 });
             }
         });
-
-
 
         add_img.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -286,9 +282,6 @@ public class DashboardActivity extends AppCompatActivity {
                 startActivity(i);
                 finish();
             }
-
-
-
         } catch (ParseException e) {
             e.printStackTrace();
         }
