@@ -55,13 +55,13 @@ Features:<br>
 • Share Goal Details with your friends with share feature<br>
 • Edit your profile in profile section<br>
 
-Tracky is a Java and XML-based native Android application. Authentication and other functionality were implemented using Firebase.<br>
+Daily Tracker is a Java and XML-based native Android application. Authentication and other functionality were implemented using Firebase.<br>
 It's an Open Source Project to which individuals from all across India contributed with passion.<br>
 We frequently find ourselves skipping our daily routine/schedule for a different reasons. This is when Tracky comes into the picture. It assists you in keeping track of your objectives and achieving them. It reminds you of your objective and keeps you up to date on your progress. We've implemented a Leaderboard feature that allows users to compare their rankings in the Leaderboard based on consistency and goal completion percentage.
 With the use of the App's share feature, users may share their Goal status as a screenshot.
 We have also included a function that allows users to take breaks or postpone an ongoing break.<br>
 
-This concludes our discussion of Tracky. I hope you find it useful in achieving your objectives.<br>
+This concludes our discussion of Daily Tracker. I hope you find it useful in achieving your objectives.<br>
   
 # How to Contribute
 
