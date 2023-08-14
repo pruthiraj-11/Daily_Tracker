@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Tracky </string>
+    <string name="app_name">Daily Tracker </string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="target_date">Target date</string>
     <string name="create_a_reminder"><b>Create a Reminder</b></string>
