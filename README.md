@@ -1,4 +1,4 @@
-# Tracky : Track your goals
+# Daily Tracker : Track your goals
 
 ## 🔗 Download the App 
 
