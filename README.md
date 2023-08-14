@@ -80,19 +80,19 @@ If you think that you can add a new feature or want to fix a bug, we invite you 
 5. Clone your forked repository of project.
 
 ```git clone
-git clone https://github.com/<your_username>/Tracky-Track-your-goals-or-targets.git
+git clone https://github.com/<your_username>/Daily_Tracker.git
 ```
 
 6. Navigate to the project directory.
 
 ```
-cd Tracky-Track-your-goals-or-targets
+cd Daily_Tracker
 ```
 
 7. Add a reference(remote) to the original repository.
 
 ```
-git remote add upstream https://github.com/maityamit/Tracky-Track-your-goals-or-targets.git
+git remote add upstream https://github.com/pruthiraj-74/Daily_Tracker.git
 ```
 
 8. Check the remotes for this repository.
